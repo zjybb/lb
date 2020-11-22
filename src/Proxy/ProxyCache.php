@@ -25,7 +25,8 @@ trait ProxyCache
 
         $this->lockKey .= $method;
         [$key, $expire] = $this->proxy[$method];
-        $key = get_cache_key($key, ...$args);
+
+        $key = sprintf($key, ...array_map(fn($v) => is_array($v) ? base64_encode(gzcompress(serialize($v))) : $v, $args));
 
         $data = $this->getCacheData($key);
         if (!blank($data)) {
