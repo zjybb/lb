@@ -1,0 +1,56 @@
+<?php
+
+namespace App\Http\Requests\#SERVICE#;
+
+use App\Services\#SERVICE#\Models\#CLASS#;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
+class #CLASS#Request extends FormRequest
+{
+    private $model = #CLASS#::class;
+
+    public function createRules(): array
+    {
+        return [
+
+        ];
+    }
+
+    public function updateRules(): array
+    {
+        return [
+
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+
+        ];
+    }
+
+    public function rules(): array
+    {
+        switch (request()->getMethod()) {
+            case 'POST':
+                return $this->createRules();
+            case 'PUT':
+                return $this->updateRules();
+            default:
+                return [];
+        }
+    }
+
+    public function authorize()
+    {
+        return true;
+    }
+
+    private function model()
+    {
+        return $this->model::find(request()->route('#class#'));
+    }
+
+}

@@ -1,0 +1,15 @@
+<?php
+
+namespace App\Services\#SERVICE#\Services;
+
+use Zjybb\Lb\Criteria\CriteriaService;
+use App\Services\#SERVICE#\Models\#CLASS#;
+use App\Services\#SERVICE#\Interfaces\#CLASS#ServiceInterface;
+
+class #CLASS#Service extends CriteriaService implements #CLASS#ServiceInterface
+{
+    protected function model(): string
+    {
+        return #CLASS#::class;
+    }
+}

@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Zjybb\Lb\Criteria\ControllerTrait;
+use App\Services\#SERVICE#\Interfaces\#CLASS#ServiceInterface;
+use App\Http\Requests\#SERVICE#\#CLASS#Request;
+use App\Http\Resources\#SERVICE#\#CLASS#Resource;
+
+class #CLASS#Controller extends Controller
+{
+    use ControllerTrait;
+
+    protected $#class#Service;
+
+    public function __construct(#CLASS#ServiceInterface $#class#Service)
+    {
+        $this->#class#Service = $#class#Service;
+    }
+
+    protected function _resource(): string
+    {
+        return #CLASS#Resource::class;
+    }
+
+    protected function _request(): string
+    {
+        return #CLASS#Request::class;
+    }
+
+    protected function _service()
+    {
+        return $this->#class#Service;
+    }
+}
