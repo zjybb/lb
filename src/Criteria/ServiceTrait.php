@@ -70,7 +70,7 @@ trait ServiceTrait
      * @param $ids
      * @return mixed
      */
-    public function delete($ids)
+    public function destory($ids)
     {
         return $this->model->destroy($ids);
     }
@@ -95,6 +95,5 @@ trait ServiceTrait
             $this->initModel();
         });
     }
-
 
 }

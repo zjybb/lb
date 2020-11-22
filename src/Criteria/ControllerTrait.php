@@ -14,7 +14,7 @@ trait ControllerTrait
      */
     public JsonResource $resource;
 
-    public bool $recordUser = false;
+    public bool $recordUser = true;
 
     abstract protected function _resource(): string;
 
@@ -198,7 +198,7 @@ trait ControllerTrait
      */
     public function createUserField(): string
     {
-        return 'createUser';
+        return 'create_user';
     }
 
     /**
@@ -206,6 +206,6 @@ trait ControllerTrait
      */
     public function editUserField(): string
     {
-        return 'updateUser';
+        return 'update_user';
     }
 }
