@@ -26,7 +26,7 @@ trait ServiceTrait
     public function findByFilter(string $attribute, $value, array $columns = ['*'], string $operator = '=')
     {
         $this->applyCriteria();
-        return tap($this->model->where($attribute, $operator, $value)->first($columns)->toArray(), function () {
+        return tap($this->model->where($attribute, $operator, $value)->first($columns), function () {
             $this->initModel();
         });
     }

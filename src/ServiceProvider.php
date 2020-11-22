@@ -130,8 +130,8 @@ class ServiceProvider extends IlluminateServiceProvider
     protected function extendValidator()
     {
         Validator::extend('remark', function ($attribute, $value, $parameters, $validator) {
-            return $value <= 128;
-        }, trans('lb::msg.remark'));
+            return strlen($value) <= 128;
+        }, trans('lb::msg.remark_length_fail'));
 
         Validator::extend('mb_alpha_dash', function ($attribute, $value, $parameters, $validator) {
             return is_string($value) && preg_match('/^[a-zA-Z0-9_-]+$/u', $value);
