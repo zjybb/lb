@@ -116,7 +116,7 @@ trait ControllerTrait
      */
     public function destroy($id)
     {
-        $res = $this->_service()->delete($id);
+        $res = $this->_service()->destroy($id);
 
         if ($res) {
             return Resp::success();
