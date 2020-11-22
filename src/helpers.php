@@ -1,11 +1,9 @@
 <?php
 
-const X_REQUEST_ID = 'X-REQUEST-ID';
-
 if (!function_exists('set_request_id')) {
     function set_request_id()
     {
-        request()->server->set('X_REQUEST_ID', \Illuminate\Support\Str::uuid()->getHex()->toString());
+        request()->server->set('X-REQUEST-ID', \Illuminate\Support\Str::uuid()->getHex()->toString());
     }
 }
 
