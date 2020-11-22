@@ -38,27 +38,20 @@ trait ServiceTrait
      */
     public function save(array $data, int $id = 0)
     {
-        if ($id !== 0) {
+        if ($id != 0) {
             $model = $this->findById($id);
             if (blank($model)) {
                 return false;
             }
+            $model->fill($data);
         } else {
-            $model = $this->model;
+            $model = new $this->model($data);
         }
 
-        $fillable = $this->model->getFillable();
-
-        foreach ($data as $field => $value) {
-            if (!blank($value)) {
-                if (!blank($fillable) && !in_array($field, $fillable)) {
-                    continue;
-                }
-                $model->setAttribute($field, $value);
-            }
+        if ($model->save()) {
+            return $model;
         }
-
-        return $model->save($data);
+        return false;
     }
 
     /**
@@ -74,21 +67,12 @@ trait ServiceTrait
     }
 
     /**
-     * @param int $id
+     * @param $ids
      * @return mixed
      */
-    public function delete(int $id)
+    public function delete($ids)
     {
-        return $this->model->destroy($id);
-    }
-
-    /**
-     * @param array $ids
-     * @return mixed
-     */
-    public function batchDelete(array $ids)
-    {
-        return $this->model->whereIn('id', $ids)->delete();
+        return $this->model->destroy($ids);
     }
 
     /**
@@ -111,5 +95,6 @@ trait ServiceTrait
             $this->initModel();
         });
     }
+
 
 }
