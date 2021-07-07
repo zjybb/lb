@@ -162,6 +162,7 @@ trait ControllerTrait
 
         if ($this->recordUser) {
             $data[$this->createUserField()] = Auth::user()->id ?? 0;
+            $data[$this->editUserField()] = Auth::user()->id ?? 0;
         }
 
         return array_merge($data, app($this->_request())->all());
