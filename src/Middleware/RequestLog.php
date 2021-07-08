@@ -30,6 +30,10 @@ class RequestLog
                 return;
             }
 
+            if (request()->isMethod('OPTIONS')) {
+                return;
+            }
+
             $http_code = 0;
             $content = [];
             if ($response instanceof Response) {
@@ -38,7 +42,7 @@ class RequestLog
             }
 
             $context = [
-                'duration' => format_duration(microtime(true) - request()->server('REQUEST_TIME_FLOAT')),
+                'duration' => round((microtime(true) - request()->server('REQUEST_TIME_FLOAT')) * 1000, 2),
                 'body' => request()->all(),
                 'http_code' => $http_code,
                 'resp_code' => Arr::get($content, 'code', ''),
