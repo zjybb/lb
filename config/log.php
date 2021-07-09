@@ -4,12 +4,12 @@
 return [
     'default' => [
         'driver' => 'daily',
-        'path' => storage_path('logs/laravel.log'),
+        'path' => storage_path('logs/default.log'),
         'level' => env('LOG_LEVEL', 'debug'),
         'tap' => [\Zjybb\Lb\Log\Formatter\BaseFormatter::class],
         'formatter' => \Zjybb\Lb\Log\Formatter\JsonFormatter::class,
         'permission' => 0644,
-        'days' => 14,
+        'days' => 7,
     ],
     'request' => [
         'driver' => 'daily',
@@ -17,8 +17,9 @@ return [
         'level' => env('LOG_LEVEL', 'info'),
         'tap' => [\Zjybb\Lb\Log\Formatter\RequestFormatter::class],
         'formatter' => \Zjybb\Lb\Log\Formatter\JsonFormatter::class,
+        'formatter_with' => ['topic' => 'request'],
         'permission' => 0644,
-        'days' => 14,
+        'days' => 7,
     ],
     'sql' => [
         'driver' => 'daily',
@@ -26,6 +27,7 @@ return [
         'level' => env('LOG_LEVEL', 'info'),
         'tap' => [\Zjybb\Lb\Log\Formatter\BaseFormatter::class],
         'formatter' => \Zjybb\Lb\Log\Formatter\JsonFormatter::class,
+        'formatter_with' => ['topic' => 'sql'],
         'permission' => 0644,
         'days' => 7,
     ],
@@ -35,8 +37,9 @@ return [
         'level' => env('LOG_LEVEL', 'info'),
         'tap' => [\Zjybb\Lb\Log\Formatter\BaseFormatter::class],
         'formatter' => \Zjybb\Lb\Log\Formatter\JsonFormatter::class,
+        'formatter_with' => ['topic' => 'verify'],
         'permission' => 0644,
-        'days' => 14,
+        'days' => 7,
     ],
     'info' => [
         'driver' => 'daily',
@@ -44,8 +47,9 @@ return [
         'level' => env('LOG_LEVEL', 'info'),
         'tap' => [\Zjybb\Lb\Log\Formatter\BaseFormatter::class],
         'formatter' => \Zjybb\Lb\Log\Formatter\JsonFormatter::class,
+        'formatter_with' => ['topic' => 'info'],
         'permission' => 0644,
-        'days' => 14,
+        'days' => 7,
     ],
     'api' => [
         'driver' => 'daily',
@@ -53,7 +57,8 @@ return [
         'level' => env('LOG_LEVEL', 'info'),
         'tap' => [\Zjybb\Lb\Log\Formatter\BaseFormatter::class],
         'formatter' => \Zjybb\Lb\Log\Formatter\JsonFormatter::class,
+        'formatter_with' => ['topic' => 'api'],
         'permission' => 0644,
-        'days' => 14,
+        'days' => 7,
     ],
 ];
