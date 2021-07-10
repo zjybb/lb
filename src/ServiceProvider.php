@@ -93,7 +93,7 @@ class ServiceProvider extends IlluminateServiceProvider
 
         if (config('lb.change_local')) {
             config(['app.locale' => 'zh-CN']);
-            config(['app.timezone' => 'Asia/Shanghai']);
+            config(['app.timezone' => 'PRC']);
         }
     }
 
@@ -101,6 +101,10 @@ class ServiceProvider extends IlluminateServiceProvider
     {
         RateLimiter::for('ping', function () {
             return Limit::perMinute(60);
+        });
+
+        Route::middleware('throttle:ping')->get('/', function () {
+            return response('');
         });
 
         Route::middleware('throttle:ping')->get('ping', function () {

@@ -26,7 +26,8 @@ class RequestLog
     {
         if (config('lb.request_log.enable', true)) {
 
-            if (Str::startsWith(request()->getPathInfo(), config('lb.request_log.filter', []))) {
+            $path = request()->getPathInfo();
+            if ($path == '/' || Str::startsWith($path, config('lb.request_log.filter', []))) {
                 return;
             }
 

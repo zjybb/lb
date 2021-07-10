@@ -14,8 +14,10 @@ return [
     'request_log' => [
         'enable' => env('LB_REQUEST_LOG_ENABLE', true),
         'filter' => [
-            '/t/',
-            '/h/',
+            '/ping',
+            '/aCG7krpwbNvSBnJo/',
+            '/b9BTeI0lp2uqW3d4/',
+            '/TdJXbaYRl9Qf6Pwv/',
         ]
     ],
 
@@ -24,8 +26,10 @@ return [
         'enable' => env('LB_SQL_LOG', true),
         'slow' => 2000,
         'filter' => [
-            '/t/',
-            '/h/',
+            '/ping',
+            '/aCG7krpwbNvSBnJo/',
+            '/b9BTeI0lp2uqW3d4/',
+            '/TdJXbaYRl9Qf6Pwv/',
         ]
     ],
 
