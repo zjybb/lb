@@ -133,7 +133,7 @@ trait ControllerTrait
     {
         $ids = request()->input('id');
 
-        $res = $this->_service()->delete($ids);
+        $res = $this->_service()->destroy($ids);
 
         if ($res) {
             return Resp::success();
