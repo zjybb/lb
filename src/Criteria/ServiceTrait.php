@@ -3,6 +3,7 @@
 namespace Zjybb\Lb\Criteria;
 
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Schema;
 
 trait ServiceTrait
 {
@@ -87,9 +88,27 @@ trait ServiceTrait
 
         $this->applyCriteria();
 
+        $_o = request()->input('_o', '');
+        if (filled($_o) && is_string($_o)) {
+            $oArr = explode(',', $_o);
+            if (filled($oArr)){
+                $m = app($this->model());
+                $column = Schema::connection($m->getConnectionName())->getColumnListing($m->getTable());
+                foreach ($oArr as $o) {
+                    $oData = explode('|', urldecode($o));
+                    if (isset($oData[0]) && isset($oData[1])) {
+                        if (in_array($oData[1], ['desc', 'asc']) && in_array($oData[0], $column)) {
+                            $model = $this->model->orderBy($oData[0], $oData[1]);
+                        }
+                    }
+                }
+            }
+        }
+
         foreach ($order as $k => $v) {
             $model = $this->model->orderBy($k, $v);
         }
+
 
         return tap($model->paginate($perPage, $columns), function () {
             $this->initModel();
