@@ -36,18 +36,19 @@ class RequestLog
             }
 
             $http_code = 0;
-            $content = [];
+            $content   = [];
             if ($response instanceof Response) {
-                $content = json_decode($response->getContent(), 1);
+                $content   = json_decode($response->getContent(), 1);
                 $http_code = $response->getStatusCode();
             }
 
             $context = [
-                'duration' => round((microtime(true) - request()->server('REQUEST_TIME_FLOAT')) * 1000, 2),
-                'body' => request()->all(),
+                'duration'  => round((microtime(true) - request()->server('REQUEST_TIME_FLOAT')) * 1000, 2),
                 'http_code' => $http_code,
+                'request'   => request()->input(),
+                'response'  => $content,
                 'resp_code' => Arr::get($content, 'code', ''),
-                'resp_msg' => Arr::get($content, 'errMsg', ''),
+                'resp_msg'  => Arr::get($content, 'errMsg', ''),
             ];
 
             log_info('', $context, 'request', false);

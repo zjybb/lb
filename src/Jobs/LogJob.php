@@ -19,6 +19,8 @@ class LogJob implements ShouldQueue
     public string $channel;
     public string $level;
 
+    public string $requestId = '';
+
     /**
      * Create a new job instance.
      *
@@ -32,7 +34,9 @@ class LogJob implements ShouldQueue
         $this->message = $message;
         $this->context = $context;
         $this->channel = $channel;
-        $this->level = $level;
+        $this->level   = $level;
+
+        $this->requestId = get_request_id();
     }
 
     /**
@@ -41,6 +45,8 @@ class LogJob implements ShouldQueue
      */
     public function handle()
     {
+        request()->server->set('X-REQUEST-ID', $this->requestId);
+
         Log::channel($this->channel)->log($this->level, $this->message, $this->context);
     }
 

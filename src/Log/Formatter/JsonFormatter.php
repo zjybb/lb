@@ -23,7 +23,6 @@ class JsonFormatter extends \Monolog\Formatter\JsonFormatter
         }
 
         if (isset($normalized['extra']) && $normalized['extra'] !== []) {
-            dd(1);
             $extra = $normalized['extra'];
             unset($normalized['extra']);
             $normalized = array_merge($normalized, $extra);
