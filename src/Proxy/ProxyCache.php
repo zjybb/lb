@@ -9,6 +9,8 @@ trait ProxyCache
     private array $proxy = [];
 
     private $lockKey = 'lock_';
+    private $coolKey = 'cool:';
+    private $hotKey = '';
 
     public function proxyMethod(string $method, string $cacheKey, int $expire): self
     {
@@ -26,18 +28,31 @@ trait ProxyCache
         $this->lockKey .= $method;
         [$key, $expire] = $this->proxy[$method];
 
-        $key = sprintf($key, ...array_map(fn($v) => is_array($v) ? base64_encode(gzcompress(serialize($v))) : $v, $args));
+        $this->setKeys(sprintf($key, ...array_map(fn($v) => is_array($v) ? base64_encode(gzcompress(serialize($v))) : $v, $args)));
 
-        $data = $this->getCacheData($key);
+        $data = $this->getCacheData();
         if (!blank($data)) {
             return $data;
         }
 
-        if ($this->getLock()) {
-            return $this->getCacheData($key);
+        $lock = Cache::lock($this->lockKey, 10);
+        if ($lock->get()) {
+            $data = $this->makeCache($expire, $method, $args);
+            $lock->release();
+            return $data;
         }
 
-        return $this->makeCache($key, $expire, $method, $args);
+        for ($i = 0; $i < 5; $i++) {
+            $data = $this->getCoolCacheData();
+            if (!blank($data)) {
+                return $data;
+            }
+            usleep(100000);
+        }
+
+        log_info("[proxy cache] 缓存为空", ["method" => $method]);
+
+        return null;
     }
 
     private function getServiceData($method, $args)
@@ -45,39 +60,31 @@ trait ProxyCache
         return call_user_func_array([$this->service, $method], $args);
     }
 
-    private function makeCache(string $key, int $expire, string $method, $args)
+    private function makeCache(int $expire, string $method, $args)
     {
-        $this->makeLock();
+        $data = $this->getServiceData($method, $args);
 
-        $cache = $this->getServiceData($method, $args);
-
-        Cache::put($key, $cache, now()->addMinutes($expire)->addSeconds(random_int(1, 59)));
-
-        $this->makeLock(true);
-
-        return $cache;
-    }
-
-    private function getCacheData($key)
-    {
-        return Cache::get($key);
-    }
-
-    private function getLock(): bool
-    {
-        $isLock = false;
-        while (Cache::has($this->lockKey)) {
-            $isLock = true;
-            usleep(50000);
+        if (!blank($data)) {
+            Cache::put($this->hotKey, $data, now()->addMinutes($expire)->addSeconds(random_int(1, 59)));
+            Cache::forever($this->coolKey, $data);
         }
 
-        return $isLock;
+        return $data;
     }
 
-    private function makeLock($del = false)
+    private function getCacheData()
     {
-        $del ?
-            Cache::forget($this->lockKey) :
-            Cache::put($this->lockKey, config('lb.lockKey'), now()->addSeconds(10));
+        return Cache::get($this->hotKey);
+    }
+
+    private function getCoolCacheData()
+    {
+        return Cache::get($this->coolKey);
+    }
+
+    private function setKeys($key)
+    {
+        $this->hotKey  .= $key;
+        $this->coolKey .= $key;
     }
 }
