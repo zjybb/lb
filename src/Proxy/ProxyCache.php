@@ -8,8 +8,8 @@ trait ProxyCache
 {
     private array $proxy = [];
 
-    private $lockKey = 'lock_';
-    private $coolKey = 'cool:';
+    private $lockKey = '';
+    private $coolKey = '';
     private $hotKey = '';
 
     public function proxyMethod(string $method, string $cacheKey, int $expire): self
@@ -25,7 +25,7 @@ trait ProxyCache
             return $this->getServiceData($method, $args);
         }
 
-        $this->lockKey .= $method;
+        $this->lockKey = 'lock_' . $method;
         [$key, $expire] = $this->proxy[$method];
 
         $this->setKeys(sprintf($key, ...array_map(fn($v) => is_array($v) ? base64_encode(gzcompress(serialize($v))) : $v, $args)));
@@ -84,7 +84,9 @@ trait ProxyCache
 
     private function setKeys($key)
     {
+        $this->hotKey  = '';
+        $this->coolKey = '';
         $this->hotKey  .= $key;
-        $this->coolKey .= $key;
+        $this->coolKey .= 'cool:' . $key;
     }
 }
